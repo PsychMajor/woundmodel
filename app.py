@@ -140,7 +140,7 @@ with col1:
     st.subheader("Input Parameters")
     
     # Supply options with checkboxes
-    st.markdown("# Available Supplies")
+    st.markdown("Available Supplies")
     supply_options = ["Gauze", "Xeroform", "Tape", "Saline", "Antibiotics", "Bandages", "Gloves", "Other"]
     supplies = []
     for option in supply_options:
