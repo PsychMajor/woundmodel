@@ -138,62 +138,74 @@ st.markdown("""
 ### Instructions:
 
 1. Fill out the input form on the left side:
-   
 2. Upload a clear, well-lit photo of the wound
-
 3. Click "Generate Assessment" to get:
 
-Remember: This is an educational tool for research and learning only. Always consult healthcare professionals for actual wound care decisions.
 """)
 
 # Create two columns
 col1, col2 = st.columns([1, 1])
 
 with col1:
-    st.subheader("Input Parameters")
+    st.markdown("## Input Parameters")
+    st.markdown("---")
     
     # Supply options with checkboxes
-    st.markdown("1. What supplies do you have available? (select all that apply)")
+    st.markdown("### 1. Available Supplies")
+    st.markdown("*Select all that apply:*")
     supply_options = ["Gauze", "Xeroform", "Tape", "Saline", "Antibiotics", "Bandages", "Gloves", "Other"]
     supplies = []
     for option in supply_options:
         if st.checkbox(option):
             supplies.append(option)
+    st.markdown("---")
 
     # Other input fields
+    st.markdown("### 2. Care Setting")
     setting = st.selectbox(
-        "2. What setting is the care being provided in?",
+        "*Where is the care being provided?*",
         ["Harm reduction clinic", "Outpatient clinic", "Home", "Other"]
     )
+    st.markdown("---")
 
+    st.markdown("### 3. Provider Expertise")
     expertise = st.selectbox(
-        "3. What is your expertise level with these wounds?",
+        "*What is your level of experience with wounds?*",
         [
             "Healthcare professional with wound care experience",
             "Healthcare professional without wound care experience",
             "Non-healthcare professional"
         ]
     )
+    st.markdown("---")
 
+    st.markdown("### 4. Hospital Access")
     willingness = st.radio(
-        "4. Is the individual willing to go to hospital?",
+        "*Is the individual willing to go to hospital if needed?*",
         ["Yes", "No"]
     )
+    st.markdown("---")
 
+    st.markdown("### 5. Clinic Visits")
     frequency = st.selectbox(
-        "5. How often does the individual visit the clinic?",
+        "*How often can the individual visit the clinic?*",
         ["Daily", "Weekly", "Other"]
     )
+    st.markdown("---")
 
+    st.markdown("### 6. Infection Status")
     infected = st.radio(
-        "6. Is the wound infected?",
+        "*Does the wound show signs of infection?*",
         ["Yes", "No", "Not sure"]
     )
+    st.markdown("---")
 
+    st.markdown("### 7. Moisture Level")
     moisture = st.radio(
-        "7. What is the wound moisture?",
+        "*What is the wound's moisture condition?*",
         ["Dry", "Wet"]
     )
+    st.markdown("---")
 
     # File uploader for image
     uploaded_file = st.file_uploader("Choose a wound image...", type=["jpg", "jpeg", "png"])
