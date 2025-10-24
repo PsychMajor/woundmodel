@@ -133,6 +133,27 @@ if not st.session_state.terms_accepted:
 
 st.title("Wound Care Assessment Tool")
 
+# Add user-friendly instructions
+st.markdown("""
+### 👋 Welcome! Here's how to use this tool:
+
+1. 📝 Fill out the input form on the left side:
+   - Check off the supplies you have available
+   - Select your care setting and expertise level
+   - Provide basic information about wound condition
+   
+2. 📸 Upload a clear, well-lit photo of the wound
+   - Ensure good lighting and focus
+   - Avoid including any identifying features
+   
+3. 🔄 Click "Generate Assessment" to get:
+   - Step-by-step wound care instructions
+   - Recommendations based on available supplies
+   - Educational insights for learning purposes
+
+⚠️ Remember: This is an educational tool for research and learning only. Always consult healthcare professionals for actual wound care decisions.
+""")
+
 # Create two columns
 col1, col2 = st.columns([1, 1])
 
@@ -140,7 +161,7 @@ with col1:
     st.subheader("Input Parameters")
     
     # Supply options with checkboxes
-    st.markdown("1. What supplies do you have available?")
+    st.markdown("1. What supplies do you have available? (select all that apply)")
     supply_options = ["Gauze", "Xeroform", "Tape", "Saline", "Antibiotics", "Bandages", "Gloves", "Other"]
     supplies = []
     for option in supply_options:
