@@ -42,11 +42,11 @@ def process_image(image_file, supplies, setting, expertise, willingness, frequen
     ### Instructions ###
     1. Carefully examine **visual landmarkers** in the wound image — e.g., color changes, necrotic tissue, swelling, drainage, redness, or exposed structures.
     2. Incorporate those landmarks explicitly into the treatment plan (e.g., "Clean around the dark necrotic edge" or "Protect the red granulating area with Xeroform").
-    3. Use only supplies the user has available. Do not use supplies if its excessive for the severity of the wound. If warranted include a statement at the end that details what other supplies would be needed for optium care.
+    3. Use only supplies the user has available. Do not use supplies if its excessive for the severity of the wound.
     4. Do not use em dashes (—), en dashes (–), or hyphens (-) for separating phrases; instead use commas or semicolons.
     5. Carefully consider the expertise-level when choosing the language for the instructions
     6. Keep your output as a **numbered list** (1., 2., 3., etc.) with concise, actionable wound-care steps.
-    7. Include a brief statement at the beginning as to what the wound is (eg. xylazine-induced or abcess, etc.)
+
     """
 
     # Prepare API request
@@ -140,7 +140,7 @@ with col1:
     st.subheader("Input Parameters")
     
     # Supply options with checkboxes
-    st.markdown("Available Supplies")
+    st.markdown("1. What supplies do you have available?")
     supply_options = ["Gauze", "Xeroform", "Tape", "Saline", "Antibiotics", "Bandages", "Gloves", "Other"]
     supplies = []
     for option in supply_options:
@@ -149,12 +149,12 @@ with col1:
 
     # Other input fields
     setting = st.selectbox(
-        "Setting",
+        "2. What setting is the care being provided in?",
         ["Harm reduction clinic", "Outpatient clinic", "Home", "Other"]
     )
 
     expertise = st.selectbox(
-        "Expertise level with these wounds",
+        "3. What is your expertise level with these wounds?",
         [
             "Healthcare professional with wound care experience",
             "Healthcare professional without wound care experience",
@@ -163,22 +163,22 @@ with col1:
     )
 
     willingness = st.radio(
-        "Willing to go to hospital?",
+        "4. Is the individual willing to go to hospital?",
         ["Yes", "No"]
     )
 
     frequency = st.selectbox(
-        "Clinic visit frequency",
+        "5. How often does the individual visit the clinic?",
         ["Daily", "Weekly", "Other"]
     )
 
     infected = st.radio(
-        "Wound infected?",
+        "6. Is the wound infected?",
         ["Yes", "No", "Not sure"]
     )
 
     moisture = st.radio(
-        "Wound moisture",
+        "7. What is the wound moisture?",
         ["Dry", "Wet"]
     )
 
