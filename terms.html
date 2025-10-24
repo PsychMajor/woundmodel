@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terms and Conditions of Use</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8fafc;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .terms-container {
+      background: white;
+      width: 90%;
+      max-width: 700px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .terms-header {
+      background-color: #1e3a8a;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .terms-content {
+      padding: 20px;
+      overflow-y: scroll;
+      max-height: 60vh;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    h1, h2, h3 {
+      color: #111827;
+    }
+
+    .terms-footer {
+      padding: 15px;
+      text-align: center;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .btn {
+      padding: 10px 18px;
+      margin: 0 10px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .btn-accept {
+      background-color: #2563eb;
+      color: white;
+    }
+
+    .btn-decline {
+      background-color: #9ca3af;
+      color: white;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    /* Optional fade-in animation */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .terms-container {
+      animation: fadeIn 0.4s ease-in-out;
+    }
+  </style>
+</head>
+<body>
+  <div class="terms-container">
+    <div class="terms-header">
+      <h1>Terms and Conditions of Use</h1>
+      <p>Effective Date: [Insert Date]</p>
+    </div>
+
+    <div class="terms-content">
+      <h2>1. Acceptance of Terms</h2>
+      <p>By accessing or using this wound care AI tool (“the Tool”), you agree to be bound by these Terms and Conditions of Use (“Terms”). If you do not agree to these Terms, you may not access or use the Tool.</p>
+
+      <h2>2. Purpose of the Tool</h2>
+      <p>This Tool is provided exclusively for research, educational, and informational purposes. It is a demonstration of artificial-intelligence models applied to wound-care scenarios. The Tool is not intended or approved for use in any medical, clinical, or home-care setting.</p>
+
+      <h2>3. No Medical Advice</h2>
+      <p>The Tool does not provide medical advice and must not be used to diagnose, treat, or manage any health condition. Do not rely on any output of the Tool to make healthcare or personal medical decisions. Use of the Tool for any clinical or home-care purpose is strictly prohibited.</p>
+
+      <h2>4. User Obligations</h2>
+      <ul>
+        <li>Use it only for research, education, or personal curiosity, not for patient care.</li>
+        <li>Do not upload identifiable patient or personal health information.</li>
+        <li>Do not redistribute outputs as medical guidance.</li>
+        <li>Comply with all laws and ethical research standards.</li>
+      </ul>
+
+      <h2>5. No Warranty</h2>
+      <p>The Tool is provided “as is” and “as available” without any warranty or guarantee of accuracy, reliability, or fitness for purpose. Outputs may be incomplete or inconsistent.</p>
+
+      <h2>6. Limitation of Liability</h2>
+      <p>To the fullest extent permitted by law, the developers, contributors, and licensors are not liable for any damages arising from use or misuse of the Tool.</p>
+
+      <h2>7. Intellectual Property</h2>
+      <p>All content, code, models, and materials are protected under applicable intellectual property laws. You may not copy, distribute, or modify the Tool except as explicitly permitted.</p>
+
+      <h2>8. Data and Privacy</h2>
+      <p>The Tool may process user-submitted data for generating educational responses. You agree not to submit personally identifiable or health information.</p>
+
+      <h2>9. Termination and Changes</h2>
+      <p>We may modify or discontinue the Tool or these Terms at any time. Continued use constitutes acceptance of updated Terms.</p>
+
+      <h2>10. Governing Law</h2>
+      <p>These Terms are governed by the laws of [Insert State/Country], without regard to conflict of law principles.</p>
+
+      <h2>11. Contact</h2>
+      <p>📧 [Your Email Address]<br>
+         📍 [Your Organization or Institution]</p>
+
+      <h3 style="color:red; text-align:center; margin-top:20px;">
+        ⚠️ This AI wound-care tool is for research and educational purposes only. 
+        It must not be used for medical diagnosis, treatment, or patient care — including at home.
+      </h3>
+    </div>
+
+    <div class="terms-footer">
+      <button class="btn btn-decline" onclick="window.location.href='https://www.google.com';">Decline</button>
+      <button class="btn btn-accept" onclick="acceptTerms()">I Agree</button>
+    </div>
+  </div>
+
+  <script>
+    function acceptTerms() {
+      alert("Thank you. You may now proceed to the AI tool.");
+      window.location.href = "index.html"; // Replace with your app's main page
+    }
+  </script>
+</body>
+</html>

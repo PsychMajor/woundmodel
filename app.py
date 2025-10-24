@@ -90,7 +90,7 @@ def show_terms_modal():
         
         st.markdown("""
         ### 1. Acceptance of Terms
-        By accessing or using this wound care AI tool ("the Tool"), you agree to be bound by these Terms and Conditions of Use ("Terms"). If you do not agree to these Terms, you may not access or use the Tool.
+        By accessing or using this wound care AI tool, you agree to be bound by these Terms and Conditions of Use ("Terms"). If you do not agree to these Terms, you may not access or use the Tool.
         
         ### 2. Purpose of the Tool
         This Tool is provided exclusively for research, educational, and informational purposes. It is a demonstration of artificial-intelligence models applied to wound-care scenarios. The Tool is not intended or approved for use in any medical, clinical, or home-care setting.
