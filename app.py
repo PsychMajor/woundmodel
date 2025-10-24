@@ -4,11 +4,16 @@ from openai import OpenAI
 import os
 from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
+# Load environment variables from .env file (local development) or environment (cloud)
+load_dotenv()  # will load from .env if present, no error if not found
 api_key = os.getenv("OPENAI_API_KEY")
 if not api_key:
-    raise ValueError("No OpenAI API key found. Please check your .env file.")
+    st.error("""
+    No OpenAI API key found. Please set up your API key:
+    - Local development: Add OPENAI_API_KEY to your .env file
+    - Streamlit Cloud: Add OPENAI_API_KEY in the app settings under Secrets
+    """)
+    st.stop()
 
 # Initialize OpenAI client
 client = OpenAI(api_key=api_key)
