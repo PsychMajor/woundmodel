@@ -1,6 +1,6 @@
 streamlit>=1.24.0
 openai>=2.6.0
 python-dotenv>=1.1.1
-Pillow>=10.0.0  # Updated for Python 3.13 compatibility
+Pillow>=10.0.0
 numpy>=1.26.4
 pandas>=2.3.3
