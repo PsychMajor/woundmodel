@@ -153,7 +153,22 @@ with col1:
     # Supply options with checkboxes
     st.markdown("### 1. Available Supplies")
     st.markdown("*Select all that apply:*")
-    supply_options = ["Gauze", "Xeroform", "Tape", "Saline", "Antibiotics", "Bandages", "Gloves", "Other"]
+    supply_options = [
+    "Sterile gauze pads",
+    "Non-stick wound pads",
+    "Sterile gauze rolls",
+    "Adhesive wound dressings",
+    "Transparent film dressings",
+    "Fabric or elastic bandages",
+    "Medical adhesive tape",
+    "Sterile saline solution",
+    "Antiseptic wipes",
+    "Antibacterial or antibiotic ointment",
+    "Barrier cream or ointment",
+    "Disposable gloves",
+    "Sharps container",
+    "Hand sanitizer"
+]
     supplies = []
     for option in supply_options:
         if st.checkbox(option):
@@ -203,7 +218,7 @@ with col1:
     st.markdown("### 7. Moisture Level")
     moisture = st.radio(
         "*What is the wound's moisture condition?*",
-        ["Dry", "Wet"]
+        ["Dry", "Wet", "Normal"]
     )
     st.markdown("---")
 
