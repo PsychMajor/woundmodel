@@ -153,11 +153,11 @@ def show_terms():
     st.markdown("---")
     col1, col2 = st.columns([1, 1])
     with col1:
-        if st.button("Decline", use_container_width=True, type="secondary"):
+        if st.button("❌ Decline", use_container_width=True, type="secondary"):
             st.error("You must accept the terms to use this application.")
             st.stop()
     with col2:
-        if st.button("I Accept These Terms", use_container_width=True, type="primary"):
+        if st.button("✅ I Accept These Terms", use_container_width=True, type="primary"):
             st.session_state.terms_accepted = True
             st.rerun()
     st.markdown("---")
