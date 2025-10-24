@@ -142,7 +142,7 @@ with col1:
             with col2:
                 st.subheader("Assessment Results")
                 if uploaded_file:
-                    st.image(uploaded_file, caption="Uploaded Image", use_column_width=True)
+                    st.image(uploaded_file, caption="Uploaded Image", use_container_width=True)
                     with st.spinner("Analyzing image..."):
                         assessment = process_image(
                             uploaded_file,
