@@ -135,23 +135,15 @@ st.title("Wound Care Assessment Tool")
 
 # Add user-friendly instructions
 st.markdown("""
-### 👋 Welcome! Here's how to use this tool:
+### Instructions:
 
-1. 📝 Fill out the input form on the left side:
-   - Check off the supplies you have available
-   - Select your care setting and expertise level
-   - Provide basic information about wound condition
+1. Fill out the input form on the left side:
    
-2. 📸 Upload a clear, well-lit photo of the wound
-   - Ensure good lighting and focus
-   - Avoid including any identifying features
-   
-3. 🔄 Click "Generate Assessment" to get:
-   - Step-by-step wound care instructions
-   - Recommendations based on available supplies
-   - Educational insights for learning purposes
+2. Upload a clear, well-lit photo of the wound
 
-⚠️ Remember: This is an educational tool for research and learning only. Always consult healthcare professionals for actual wound care decisions.
+3. Click "Generate Assessment" to get:
+
+Remember: This is an educational tool for research and learning only. Always consult healthcare professionals for actual wound care decisions.
 """)
 
 # Create two columns
