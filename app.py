@@ -124,6 +124,7 @@ def show_terms():
     # Terms and Conditions of Use
     ### Effective Date: October 24, 2025
     
+    ### ⚠️ WARNING
     This AI wound-care tool is for research and educational purposes only. 
     It must not be used for medical diagnosis, treatment, or patient care — including at home.
     """)
