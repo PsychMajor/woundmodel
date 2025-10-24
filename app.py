@@ -88,7 +88,7 @@ def show_terms():
     # Terms and Conditions of Use
     ### Effective Date: October 24, 2025
     
-    ### ⚠️ WARNING
+    
     This AI wound-care tool is for research and educational purposes only. 
     It must not be used for medical diagnosis, treatment, or patient care — including at home.
     """)
@@ -117,11 +117,11 @@ def show_terms():
     st.markdown("---")
     col1, col2 = st.columns([1, 1])
     with col1:
-        if st.button("❌ Decline", use_container_width=True, type="secondary"):
+        if st.button("Decline", use_container_width=True, type="secondary"):
             st.error("You must accept the terms to use this application.")
             st.stop()
     with col2:
-        if st.button("✅ I Accept These Terms", use_container_width=True, type="primary"):
+        if st.button("I Accept These Terms", use_container_width=True, type="primary"):
             st.session_state.terms_accepted = True
             st.rerun()
     st.markdown("---")
