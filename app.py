@@ -83,14 +83,20 @@ st.set_page_config(page_title="Wound Care Assessment", layout="wide")
 if 'terms_accepted' not in st.session_state:
     st.session_state.terms_accepted = False
 
-def show_terms_modal():
-    with st.modal("Terms and Conditions", True):
-        st.markdown("## Terms and Conditions of Use")
-        st.markdown("### Effective Date: October 24, 2025")
-        
+def show_terms():
+    st.markdown("""
+    # Terms and Conditions of Use
+    ### Effective Date: October 24, 2025
+    
+    ### ⚠️ WARNING
+    This AI wound-care tool is for research and educational purposes only. 
+    It must not be used for medical diagnosis, treatment, or patient care — including at home.
+    """)
+    
+    with st.expander("Click to Read Full Terms", expanded=True):
         st.markdown("""
         ### 1. Acceptance of Terms
-        By accessing or using this wound care AI tool, you agree to be bound by these Terms and Conditions of Use ("Terms"). If you do not agree to these Terms, you may not access or use the Tool.
+        By accessing or using this wound care AI tool ("the Tool"), you agree to be bound by these Terms and Conditions of Use ("Terms"). If you do not agree to these Terms, you may not access or use the Tool.
         
         ### 2. Purpose of the Tool
         This Tool is provided exclusively for research, educational, and informational purposes. It is a demonstration of artificial-intelligence models applied to wound-care scenarios. The Tool is not intended or approved for use in any medical, clinical, or home-care setting.
@@ -106,24 +112,23 @@ def show_terms_modal():
         
         ### 5. No Warranty
         The Tool is provided "as is" and "as available" without any warranty or guarantee of accuracy, reliability, or fitness for purpose. Outputs may be incomplete or inconsistent.
-        
-        ### ⚠️ WARNING
-        This AI wound-care tool is for research and educational purposes only. It must not be used for medical diagnosis, treatment, or patient care — including at home.
         """)
-        
-        col1, col2 = st.columns([1, 1])
-        with col1:
-            if st.button("Decline", type="primary"):
-                st.error("You must accept the terms to use this application.")
-                st.stop()
-        with col2:
-            if st.button("I Accept", type="primary"):
-                st.session_state.terms_accepted = True
-                st.rerun()
+    
+    st.markdown("---")
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        if st.button("❌ Decline", use_container_width=True, type="secondary"):
+            st.error("You must accept the terms to use this application.")
+            st.stop()
+    with col2:
+        if st.button("✅ I Accept These Terms", use_container_width=True, type="primary"):
+            st.session_state.terms_accepted = True
+            st.rerun()
+    st.markdown("---")
 
 # Show terms if not accepted
 if not st.session_state.terms_accepted:
-    show_terms_modal()
+    show_terms()
     st.stop()
 
 st.title("Wound Care Assessment Tool")
