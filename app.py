@@ -83,42 +83,6 @@ st.set_page_config(page_title="Wound Care Assessment", layout="wide")
 if 'terms_accepted' not in st.session_state:
     st.session_state.terms_accepted = False
 
-# --- App styling: professional color palette and card styles ---
-st.markdown(
-    """
-    <style>
-    /* Fonts and base */
-    html, body, .block-container { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; }
-
-    /* Top header bar */
-    .app-header { background: linear-gradient(90deg, #0f4871 0%, #2b8a96 100%); padding: 18px; border-radius: 8px; color: white; }
-    .app-title { font-size:22px; font-weight:700; margin:0; }
-    .app-sub { font-size:13px; margin-top:4px; opacity:0.9; }
-
-    /* Card style for results */
-    .card { background-color: #ffffff; border-radius: 10px; padding: 16px; box-shadow: 0 6px 18px rgba(11,15,22,0.06); }
-
-    /* Image styling */
-    .uploaded-img img { border-radius: 8px; box-shadow: 0 6px 18px rgba(11,15,22,0.08); }
-
-    /* Buttons */
-    .stButton>button {
-        border-radius: 8px; padding: 10px 14px; font-weight:600;
-    }
-    .stButton>button[kind="primary"], .stButton>button:active { background: #2b8a96; color: white; }
-    .stButton>button:focus { outline: 3px solid rgba(43,138,150,0.18); }
-
-    /* Sidebar tweaks */
-    .sidebar .stSidebar { background-color: #f7fbfb; }
-
-    /* Terms expander style */
-    .stExpanderHeader { font-weight:600; }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
-
-
 def show_terms():
     st.markdown("""
     # Terms and Conditions of Use
@@ -167,111 +131,80 @@ if not st.session_state.terms_accepted:
     show_terms()
     st.stop()
 
-# Header
-st.markdown("""
-<div class='app-header'>
-  <div style='display:flex; justify-content:space-between; align-items:center;'>
-    <div>
-      <p class='app-title'>Wound Care Assessment Tool</p>
-      <p class='app-sub'>Research & educational use only — not for clinical decision-making</p>
-    </div>
-  </div>
-</div>
-""", unsafe_allow_html=True)
+st.title("Wound Care Assessment Tool")
 
-# --- Sidebar: inputs ---
-st.sidebar.header("Patient / Context Inputs")
-st.sidebar.markdown("Select supplies and context before generating the assessment.")
+# Create two columns
+col1, col2 = st.columns([1, 1])
 
-# Supply options
-supply_options = ["Gauze", "Xeroform", "Tape", "Saline", "Antibiotics", "Bandages", "Gloves", "Other"]
-supplies = []
-for option in supply_options:
-    if st.sidebar.checkbox(option):
-        supplies.append(option)
+with col1:
+    st.subheader("Input Parameters")
+    
+    # Supply options with checkboxes
+    st.markdown("#### Available Supplies")
+    supply_options = ["Gauze", "Xeroform", "Tape", "Saline", "Antibiotics", "Bandages", "Gloves", "Other"]
+    supplies = []
+    for option in supply_options:
+        if st.checkbox(option):
+            supplies.append(option)
 
-# Other input fields
-setting = st.sidebar.selectbox(
-    "Setting",
-    ["Harm reduction clinic", "Outpatient clinic", "Home", "Other"]
-)
+    # Other input fields
+    setting = st.selectbox(
+        "Setting",
+        ["Harm reduction clinic", "Outpatient clinic", "Home", "Other"]
+    )
 
-expertise = st.sidebar.selectbox(
-    "Expertise level",
-    [
-        "Healthcare professional with wound care experience",
-        "Healthcare professional without wound care experience",
-        "Non-healthcare professional"
-    ]
-)
+    expertise = st.selectbox(
+        "Expertise level with these wounds",
+        [
+            "Healthcare professional with wound care experience",
+            "Healthcare professional without wound care experience",
+            "Non-healthcare professional"
+        ]
+    )
 
-willingness = st.sidebar.radio(
-    "Willing to go to hospital?",
-    ["Yes", "No"]
-)
+    willingness = st.radio(
+        "Willing to go to hospital?",
+        ["Yes", "No"]
+    )
 
-frequency = st.sidebar.selectbox(
-    "Clinic visit frequency",
-    ["Daily", "Weekly", "Other"]
-)
+    frequency = st.selectbox(
+        "Clinic visit frequency",
+        ["Daily", "Weekly", "Other"]
+    )
 
-infected = st.sidebar.radio(
-    "Wound infected?",
-    ["Yes", "No", "Not sure"]
-)
+    infected = st.radio(
+        "Wound infected?",
+        ["Yes", "No", "Not sure"]
+    )
 
-moisture = st.sidebar.radio(
-    "Wound moisture",
-    ["Dry", "Wet"]
-)
+    moisture = st.radio(
+        "Wound moisture",
+        ["Dry", "Wet"]
+    )
 
-# File uploader
-uploaded_file = st.sidebar.file_uploader("Upload wound image", type=["jpg", "jpeg", "png"]) 
+    # File uploader for image
+    uploaded_file = st.file_uploader("Choose a wound image...", type=["jpg", "jpeg", "png"])
 
-# Generate button
-generate = st.sidebar.button("Generate Assessment", use_container_width=True, type="primary")
-
-# --- Main content: results and image ---
-main_col, side_col = st.columns([2, 1])
-
-with main_col:
-    st.markdown("<div class='card'>", unsafe_allow_html=True)
-    st.subheader("Assessment Results")
-    if generate:
-        # validation
+    # Submit button
+    if st.button("Generate Assessment"):
         if uploaded_file is None:
             st.error("Please upload an image first.")
         elif not supplies:
-            st.error("Please select at least one available supply in the sidebar.")
+            st.error("Please select at least one available supply.")
         else:
-            # Show image and run analysis
-            if uploaded_file:
-                st.markdown("<div class='uploaded-img'>", unsafe_allow_html=True)
-                st.image(uploaded_file, caption="Uploaded Image", use_container_width=True)
-                st.markdown("</div>", unsafe_allow_html=True)
-                with st.spinner("Analyzing image..."):
-                    assessment = process_image(
-                        uploaded_file,
-                        supplies,
-                        setting,
-                        expertise,
-                        willingness,
-                        frequency,
-                        infected,
-                        moisture
-                    )
-                    # Present assessment in a clean markdown panel
-                    st.markdown("---")
-                    st.markdown(assessment)
-    else:
-        st.info("Use the sidebar to provide inputs and click 'Generate Assessment' to analyze an image.")
-    st.markdown("</div>", unsafe_allow_html=True)
-
-with side_col:
-    st.markdown("<div class='card'>", unsafe_allow_html=True)
-    st.subheader("Quick Tips")
-    st.markdown("- Upload clear, focused photos with good lighting.\n- Avoid photos with identifying features.\n- Select the supplies you actually have on hand.")
-    st.markdown("---")
-    st.subheader("Interpretation Guide")
-    st.markdown("The assessment is educational and may suggest incremental steps; always defer to a licensed clinician for decisions about wound care.")
-    st.markdown("</div>", unsafe_allow_html=True)
+            with col2:
+                st.subheader("Assessment Results")
+                if uploaded_file:
+                    st.image(uploaded_file, caption="Uploaded Image", use_container_width=True)
+                    with st.spinner("Analyzing image..."):
+                        assessment = process_image(
+                            uploaded_file,
+                            supplies,
+                            setting,
+                            expertise,
+                            willingness,
+                            frequency,
+                            infected,
+                            moisture
+                        )
+                        st.markdown(assessment)
