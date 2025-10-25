@@ -262,3 +262,37 @@ with col1:
                             moisture
                         )
                         st.markdown(assessment)
+
+                        # Follow-up question UI: allow the user to ask clarifying questions
+                        st.markdown("---")
+                        st.markdown("### Follow-up")
+                        st.write("Do you have any questions or clarifications?")
+                        user_question = st.text_area("Your question or clarification:", key="followup_question")
+                        if st.button("Ask follow-up", key="ask_followup"):
+                            if not user_question or not user_question.strip():
+                                st.warning("Please enter a question before asking.")
+                            else:
+                                with st.spinner("Getting assistant response..."):
+                                    try:
+                                        follow_messages = [
+                                            {
+                                                "role": "user",
+                                                "content": (
+                                                    f"The assistant previously generated the following assessment:\n\n{assessment}\n\n"
+                                                    f"User follow-up question: {user_question}\n\n"
+                                                    "Please answer the user's question clearly, referencing the assessment where helpful. "
+                                                    "Be concise and actionable. Make answer only paragraph long maximum."
+                                                ),
+                                            }
+                                        ]
+                                        follow_resp = client.chat.completions.create(
+                                            model="gpt-4.1",
+                                            messages=follow_messages,
+                            ,
+                                        )
+                                        follow_text = follow_resp.choices[0].message.content
+                                    except Exception as e:
+                                        follow_text = f"⚠️ Error calling OpenAI API: {e}"
+
+                                st.markdown("**Assistant response:**")
+                                st.markdown(follow_text)
