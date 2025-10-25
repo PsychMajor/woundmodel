@@ -137,9 +137,9 @@ st.title("Wound Care Assessment Tool")
 st.markdown("""
 ### Instructions:
 
-1. Fill out the input form on the left side:
+1. Fill out all the questions:
 2. Upload a clear, well-lit photo of the wound
-3. Click "Generate Assessment" to get:
+3. Click "Generate Assessment" to get a personalized wound care plan:
 
 """)
 
