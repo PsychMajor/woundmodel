@@ -283,8 +283,7 @@ with col1:
                             "Follow-up needed?",
                             ["No", "Yes"],
                             key="followup_choice_radio",
-                            index=["No", "Yes"].index(st.session_state.followup_choice),
-                            label_visibility="collapsed"
+                            index=["No", "Yes"].index(st.session_state.followup_choice)
                         )
                         if st.session_state.followup_choice == "No":
                             if st.button("Submit follow-up", key="submit_followup_no"):
