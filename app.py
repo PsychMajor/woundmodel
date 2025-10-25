@@ -186,6 +186,11 @@ with col1:
         "*Where is the care being provided?*",
         ["Harm reduction clinic", "Outpatient clinic", "Home", "Other"]
     )
+    # If the user selects Other, show a text box to capture the custom setting
+    if setting == "Other":
+        other_setting = st.text_input("Please specify care setting:", key="other_setting_input")
+        if other_setting:
+            setting = f"Other: {other_setting}"
     st.markdown("---")
 
     st.markdown("### 3. Provider Expertise")
