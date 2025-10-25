@@ -172,12 +172,14 @@ if st.session_state.current_page == "input":
     st.markdown("### 1. Available Supplies")
     st.markdown("*Select all that apply:*")
     supply_options = [
+        "BandAid",
+        "Bandage",
+        "Fabric or elastic bandages",
         "Sterile gauze pads",
-        "Non-stick wound pads",
         "Sterile gauze rolls",
+        "Non-stick wound pads",
         "Adhesive wound dressings",
         "Transparent film dressings",
-        "Fabric or elastic bandages",
         "Medical adhesive tape",
         "Sterile saline solution",
         "Antiseptic wipes",
