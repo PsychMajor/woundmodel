@@ -83,6 +83,12 @@ st.set_page_config(page_title="Wound Care Assessment", layout="wide")
 if 'terms_accepted' not in st.session_state:
     st.session_state.terms_accepted = False
 
+# Initialize session state for page navigation
+if 'current_page' not in st.session_state:
+    st.session_state.current_page = "input"  # "input" or "results"
+if 'assessment_data' not in st.session_state:
+    st.session_state.assessment_data = None
+
 def show_terms():
     st.markdown("""
     # Terms and Conditions of Use
@@ -135,22 +141,27 @@ if not st.session_state.terms_accepted:
     show_terms()
     st.stop()
 
-st.title("Wound Care Assessment Tool")
+# Show terms if not accepted
+if not st.session_state.terms_accepted:
+    show_terms()
+    st.stop()
 
-# Add user-friendly instructions
-st.markdown("""
-### Instructions:
+# PAGE ROUTING: Show input page or results page
+if st.session_state.current_page == "input":
+    # ==================== INPUT PAGE ====================
+    st.title("Wound Care Assessment Tool")
 
-1. Fill out all the questions:
-2. Upload a clear, well-lit photo of the wound
-3. Click "Generate Assessment" to get a personalized wound care plan:
+    # Add user-friendly instructions
+    st.markdown("""
+    ### Instructions:
 
-""")
+    1. Fill out all the questions
+    2. Upload a clear, well-lit photo of the wound
+    3. Click "Generate Assessment" to get a personalized wound care plan
 
-# Create two columns
-col1, col2 = st.columns([1, 1])
+    """)
 
-with col1:
+    # Create single column for input
     st.markdown("## Input Parameters")
     st.markdown("---")
     
@@ -244,95 +255,136 @@ with col1:
     uploaded_file = st.file_uploader("Choose a wound image...", type=["jpg", "jpeg", "png"])
 
     # Submit button
-    if st.button("Generate Assessment"):
+    if st.button("Generate Assessment", type="primary", use_container_width=True):
         if uploaded_file is None:
             st.error("Please upload an image first.")
         elif not supplies:
             st.error("Please select at least one available supply.")
         else:
-            with col2:
-                st.subheader("Assessment Results")
-                if uploaded_file:
-                    # Display image in a version-compatible way:
-                    # - Newer Streamlit supports width='stretch'
-                    # - Older Streamlit (<1.30-ish) uses use_column_width
-                    try:
-                        st.image(uploaded_file, caption="Uploaded Image", width='stretch')
-                    except TypeError:
-                        st.image(uploaded_file, caption="Uploaded Image", use_column_width=True)
-                    with st.spinner("Analyzing image..."):
-                        assessment = process_image(
-                            uploaded_file,
-                            supplies,
-                            setting,
-                            expertise,
-                            willingness,
-                            frequency,
-                            infected,
-                            moisture
-                        )
-                        st.markdown(assessment)
+            # Store data and switch to results page
+            with st.spinner("Analyzing image..."):
+                assessment = process_image(
+                    uploaded_file,
+                    supplies,
+                    setting,
+                    expertise,
+                    willingness,
+                    frequency,
+                    infected,
+                    moisture
+                )
+                st.session_state.assessment_data = {
+                    'assessment': assessment,
+                    'image': uploaded_file,
+                    'supplies': supplies,
+                    'setting': setting,
+                    'expertise': expertise,
+                    'willingness': willingness,
+                    'frequency': frequency,
+                    'infected': infected,
+                    'moisture': moisture
+                }
+                st.session_state.current_page = "results"
+                # Reset follow-up state for new assessment
+                st.session_state.followup_choice = "No"
+                st.session_state.followup_question = ""
+                st.session_state.followup_submitted = False
+                st.session_state.followup_response = ""
+                # Use compatible rerun
+                if hasattr(st, "rerun"):
+                    st.rerun()
+                else:
+                    st.experimental_rerun()
 
-                        # Follow-up question UI: allow the user to ask clarifying questions
-                        st.markdown("---")
-                        st.markdown("### Follow-up")
-                        st.write("Do you have any questions or clarifications?")
+elif st.session_state.current_page == "results":
+    # ==================== RESULTS PAGE ====================
+    st.title("Wound Care Assessment Results")
+    
+    # Back button
+    if st.button("← Back to Input", type="secondary"):
+        st.session_state.current_page = "input"
+        if hasattr(st, "rerun"):
+            st.rerun()
+        else:
+            st.experimental_rerun()
+    
+    st.markdown("---")
+    
+    # Display uploaded image
+    if st.session_state.assessment_data:
+        uploaded_file = st.session_state.assessment_data['image']
+        assessment = st.session_state.assessment_data['assessment']
+        
+        # Display image in a version-compatible way
+        try:
+            st.image(uploaded_file, caption="Uploaded Image", width='stretch')
+        except TypeError:
+            st.image(uploaded_file, caption="Uploaded Image", use_column_width=True)
+        
+        st.markdown("---")
+        st.markdown("## Assessment")
+        st.markdown(assessment)
 
-                        # Initialize session state for follow-up
-                        if 'followup_choice' not in st.session_state:
-                            st.session_state.followup_choice = "No"
-                        if 'followup_question' not in st.session_state:
-                            st.session_state.followup_question = ""
-                        if 'followup_submitted' not in st.session_state:
-                            st.session_state.followup_submitted = False
-                        if 'followup_response' not in st.session_state:
-                            st.session_state.followup_response = ""
+        # Follow-up question UI
+        st.markdown("---")
+        st.markdown("### Follow-up")
+        st.write("Do you have any questions or clarifications?")
 
-                        # UI controls
-                        st.session_state.followup_choice = st.radio(
-                            "Follow-up needed?",
-                            ["No", "Yes"],
-                            key="followup_choice_radio",
-                            index=["No", "Yes"].index(st.session_state.followup_choice)
-                        )
-                        if st.session_state.followup_choice == "No":
-                            if st.button("Submit follow-up", key="submit_followup_no"):
-                                st.session_state.followup_submitted = True
-                                st.session_state.followup_response = "Thank you for using the wound assistant."
-                        else:
-                            st.session_state.followup_question = st.text_area("Please enter your question or clarification:", key="followup_question_area", value=st.session_state.followup_question)
-                            if st.button("Ask follow-up", key="ask_followup_yes"):
-                                if not st.session_state.followup_question or not st.session_state.followup_question.strip():
-                                    st.warning("Please enter a question before asking.")
-                                else:
-                                    with st.spinner("Getting assistant response..."):
-                                        try:
-                                            follow_messages = [
-                                                {
-                                                    "role": "user",
-                                                    "content": (
-                                                        f"The assistant previously generated the following assessment:\n\n{assessment}\n\n"
-                                                        f"User follow-up question: {st.session_state.followup_question}\n\n"
-                                                        "Please answer the user's question clearly, referencing the assessment where helpful. "
-                                                        "Be concise and actionable. Make answer only paragraph long maximum."
-                                                    ),
-                                                }
-                                            ]
-                                            follow_resp = client.chat.completions.create(
-                                                model="gpt-4.1",
-                                                messages=follow_messages,
-                            
-                                            )
-                                            st.session_state.followup_response = follow_resp.choices[0].message.content
-                                            st.session_state.followup_submitted = True
-                                        except Exception as e:
-                                            st.session_state.followup_response = f"⚠️ Error calling OpenAI API: {e}"
-                                            st.session_state.followup_submitted = True
+        # Initialize session state for follow-up
+        if 'followup_choice' not in st.session_state:
+            st.session_state.followup_choice = "No"
+        if 'followup_question' not in st.session_state:
+            st.session_state.followup_question = ""
+        if 'followup_submitted' not in st.session_state:
+            st.session_state.followup_submitted = False
+        if 'followup_response' not in st.session_state:
+            st.session_state.followup_response = ""
 
-                        # Show response if submitted
-                        if st.session_state.followup_submitted:
-                            if st.session_state.followup_choice == "No":
-                                st.success(st.session_state.followup_response)
-                            else:
-                                st.markdown("**Assistant response:**")
-                                st.markdown(st.session_state.followup_response)
+        # UI controls
+        st.session_state.followup_choice = st.radio(
+            "Follow-up needed?",
+            ["No", "Yes"],
+            key="followup_choice_radio",
+            index=["No", "Yes"].index(st.session_state.followup_choice)
+        )
+        if st.session_state.followup_choice == "No":
+            if st.button("Submit follow-up", key="submit_followup_no"):
+                st.session_state.followup_submitted = True
+                st.session_state.followup_response = "Thank you for using the wound assistant."
+        else:
+            st.session_state.followup_question = st.text_area("Please enter your question or clarification:", key="followup_question_area", value=st.session_state.followup_question)
+            if st.button("Ask follow-up", key="ask_followup_yes"):
+                if not st.session_state.followup_question or not st.session_state.followup_question.strip():
+                    st.warning("Please enter a question before asking.")
+                else:
+                    with st.spinner("Getting assistant response..."):
+                        try:
+                            follow_messages = [
+                                {
+                                    "role": "user",
+                                    "content": (
+                                        f"The assistant previously generated the following assessment:\n\n{assessment}\n\n"
+                                        f"User follow-up question: {st.session_state.followup_question}\n\n"
+                                        "Please answer the user's question clearly, referencing the assessment where helpful. "
+                                        "Be concise and actionable. Make answer only paragraph long maximum."
+                                    ),
+                                }
+                            ]
+                            follow_resp = client.chat.completions.create(
+                                model="gpt-4.1",
+                                messages=follow_messages,
+                                max_tokens=500,
+                            )
+                            st.session_state.followup_response = follow_resp.choices[0].message.content
+                            st.session_state.followup_submitted = True
+                        except Exception as e:
+                            st.session_state.followup_response = f"⚠️ Error calling OpenAI API: {e}"
+                            st.session_state.followup_submitted = True
+
+        # Show response if submitted
+        if st.session_state.followup_submitted:
+            if st.session_state.followup_choice == "No":
+                st.success(st.session_state.followup_response)
+            else:
+                st.markdown("**Assistant response:**")
+                st.markdown(st.session_state.followup_response)
