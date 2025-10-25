@@ -154,25 +154,30 @@ with col1:
     st.markdown("### 1. Available Supplies")
     st.markdown("*Select all that apply:*")
     supply_options = [
-    "Sterile gauze pads",
-    "Non-stick wound pads",
-    "Sterile gauze rolls",
-    "Adhesive wound dressings",
-    "Transparent film dressings",
-    "Fabric or elastic bandages",
-    "Medical adhesive tape",
-    "Sterile saline solution",
-    "Antiseptic wipes",
-    "Antibacterial or antibiotic ointment",
-    "Barrier cream or ointment",
-    "Disposable gloves",
-    "Sharps container",
-    "Hand sanitizer"
-]
+        "Sterile gauze pads",
+        "Non-stick wound pads",
+        "Sterile gauze rolls",
+        "Adhesive wound dressings",
+        "Transparent film dressings",
+        "Fabric or elastic bandages",
+        "Medical adhesive tape",
+        "Sterile saline solution",
+        "Antiseptic wipes",
+        "Antibacterial or antibiotic ointment",
+        "Barrier cream or ointment",
+        "Disposable gloves",
+        "Other"
+    ]
     supplies = []
     for option in supply_options:
-        if st.checkbox(option):
-            supplies.append(option)
+        checked = st.checkbox(option, key=f"supply_{option}")
+        if checked:
+            if option == "Other":
+                other_supplies = st.text_input("Please specify other supplies:", key="other_supplies_input")
+                if other_supplies:
+                    supplies.append(f"Other: {other_supplies}")
+            else:
+                supplies.append(option)
     st.markdown("---")
 
     # Other input fields
@@ -206,6 +211,10 @@ with col1:
         "*How often can the individual visit the clinic?*",
         ["Daily", "Weekly", "Other"]
     )
+    if frequency == "Other":
+        other_frequency = st.text_input("Please specify visit frequency:", key="other_frequency_input")
+        if other_frequency:
+            frequency = f"Other: {other_frequency}"
     st.markdown("---")
 
     st.markdown("### 6. Infection Status")
