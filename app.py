@@ -279,7 +279,13 @@ with col1:
                             st.session_state.followup_response = ""
 
                         # UI controls
-                        st.session_state.followup_choice = st.radio("", ["No", "Yes"], key="followup_choice_radio", index=["No", "Yes"].index(st.session_state.followup_choice))
+                        st.session_state.followup_choice = st.radio(
+                            "Follow-up needed?",
+                            ["No", "Yes"],
+                            key="followup_choice_radio",
+                            index=["No", "Yes"].index(st.session_state.followup_choice),
+                            label_visibility="collapsed"
+                        )
                         if st.session_state.followup_choice == "No":
                             if st.button("Submit follow-up", key="submit_followup_no"):
                                 st.session_state.followup_submitted = True
