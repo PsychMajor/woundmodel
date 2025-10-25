@@ -123,10 +123,6 @@ def show_terms():
     st.markdown("---")
     col1, col2 = st.columns([1, 1])
     with col1:
-        if st.button("Decline", use_container_width=True, type="secondary"):
-            st.error("You must accept the terms to use this application.")
-            st.stop()
-    with col2:
         if st.button("I Accept These Terms", use_container_width=True, type="primary"):
             st.session_state.terms_accepted = True
             # Backward compatibility: Streamlit < 1.27 uses experimental_rerun
@@ -134,6 +130,11 @@ def show_terms():
                 st.rerun()
             else:
                 st.experimental_rerun()
+    with col2:
+        if st.button("Decline", use_container_width=True, type="secondary"):
+            st.error("You must accept the terms to use this application.")
+            st.stop()
+    
     st.markdown("---")
 
 # Show terms if not accepted
@@ -345,9 +346,9 @@ elif st.session_state.current_page == "results":
         # UI controls
         st.session_state.followup_choice = st.radio(
             "Follow-up needed?",
-            ["No", "Yes"],
+            ["Yes", "No"],
             key="followup_choice_radio",
-            index=["No", "Yes"].index(st.session_state.followup_choice)
+            index=["Yes", "No"].index(st.session_state.followup_choice)
         )
         if st.session_state.followup_choice == "No":
             if st.button("Submit follow-up", key="submit_followup_no"):
