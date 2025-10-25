@@ -288,7 +288,7 @@ with col1:
                                         follow_resp = client.chat.completions.create(
                                             model="gpt-4.1",
                                             messages=follow_messages,
-                            ,
+                                            
                                         )
                                         follow_text = follow_resp.choices[0].message.content
                                     except Exception as e:
