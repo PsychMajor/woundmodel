@@ -166,7 +166,10 @@ if st.session_state.current_page == "input":
 
     # Create single column for input
     st.markdown("## Input Parameters")
-    st.markdown("---")
+    st.markdown(
+        '<hr style="border:0;height:4px;background:#cfcfcf;margin:12px 0;border-radius:2px;">',
+        unsafe_allow_html=True,
+    )
     
     # Supply options with checkboxes
     st.markdown("### 1. Available Supplies")
