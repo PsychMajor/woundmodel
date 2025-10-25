@@ -123,7 +123,11 @@ def show_terms():
     with col2:
         if st.button("I Accept These Terms", use_container_width=True, type="primary"):
             st.session_state.terms_accepted = True
-            st.rerun()
+            # Backward compatibility: Streamlit < 1.27 uses experimental_rerun
+            if hasattr(st, "rerun"):
+                st.rerun()
+            else:
+                st.experimental_rerun()
     st.markdown("---")
 
 # Show terms if not accepted
@@ -249,7 +253,13 @@ with col1:
             with col2:
                 st.subheader("Assessment Results")
                 if uploaded_file:
-                    st.image(uploaded_file, caption="Uploaded Image", use_container_width=True)
+                    # Display image in a version-compatible way:
+                    # - Newer Streamlit supports width='stretch'
+                    # - Older Streamlit (<1.30-ish) uses use_column_width
+                    try:
+                        st.image(uploaded_file, caption="Uploaded Image", width='stretch')
+                    except TypeError:
+                        st.image(uploaded_file, caption="Uploaded Image", use_column_width=True)
                     with st.spinner("Analyzing image..."):
                         assessment = process_image(
                             uploaded_file,
@@ -311,7 +321,7 @@ with col1:
                                             follow_resp = client.chat.completions.create(
                                                 model="gpt-4.1",
                                                 messages=follow_messages,
-                                                max_tokens=500,
+                            
                                             )
                                             st.session_state.followup_response = follow_resp.choices[0].message.content
                                             st.session_state.followup_submitted = True
