@@ -151,6 +151,7 @@ if st.session_state.current_page == "input":
     # ==================== INPUT PAGE ====================
     st.title("Wound Care Assessment Tool")
 
+    st.markdown("---")
     # Add user-friendly instructions
     st.markdown("""
     ### Instructions:
@@ -160,6 +161,7 @@ if st.session_state.current_page == "input":
     3. Click "Generate Assessment" to get a personalized wound care plan
 
     """)
+    st.markdown("---")
 
     # Create single column for input
     st.markdown("## Input Parameters")
