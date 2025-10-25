@@ -178,7 +178,7 @@ with col1:
     # Other input fields
     st.markdown("### 2. Care Setting")
     setting = st.selectbox(
-        "<div style='font-size: 40px'>*Where is the care being provided?*</div>",
+        "<div style='font-size: 50px'>*Where is the care being provided?*</div>",
         ["Harm reduction clinic", "Outpatient clinic", "Home", "Other"],
         key="setting_selector"
     )
