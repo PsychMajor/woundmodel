@@ -289,10 +289,8 @@ if st.session_state.current_page == "input":
                 }
                 st.session_state.current_page = "results"
                 # Reset follow-up state for new assessment
-                st.session_state.followup_choice = "No"
-                st.session_state.followup_question = ""
-                st.session_state.followup_submitted = False
-                st.session_state.followup_response = ""
+                st.session_state.conversation_history = []
+                st.session_state.continue_conversation = True
                 # Use compatible rerun
                 if hasattr(st, "rerun"):
                     st.rerun()
@@ -328,66 +326,95 @@ elif st.session_state.current_page == "results":
         st.markdown("## Assessment")
         st.markdown(assessment)
 
-        # Follow-up question UI
+        # Follow-up question UI - Multi-turn conversation
         st.markdown("---")
         st.markdown("### Follow-up")
-        st.write("Do you have any questions or clarifications?")
-
-        # Initialize session state for follow-up
-        if 'followup_choice' not in st.session_state:
-            st.session_state.followup_choice = "No"
-        if 'followup_question' not in st.session_state:
-            st.session_state.followup_question = ""
-        if 'followup_submitted' not in st.session_state:
-            st.session_state.followup_submitted = False
-        if 'followup_response' not in st.session_state:
-            st.session_state.followup_response = ""
-
-        # UI controls
-        st.session_state.followup_choice = st.radio(
-            "Follow-up needed?",
-            ["Yes", "No"],
-            key="followup_choice_radio",
-            index=["Yes", "No"].index(st.session_state.followup_choice)
-        )
-        if st.session_state.followup_choice == "No":
-            if st.button("Submit follow-up", key="submit_followup_no"):
-                st.session_state.followup_submitted = True
-                st.session_state.followup_response = "Thank you for using the wound assistant."
-        else:
-            st.session_state.followup_question = st.text_area("Please enter your question or clarification:", key="followup_question_area", value=st.session_state.followup_question)
-            if st.button("Ask follow-up", key="ask_followup_yes"):
-                if not st.session_state.followup_question or not st.session_state.followup_question.strip():
-                    st.warning("Please enter a question before asking.")
-                else:
-                    with st.spinner("Getting assistant response..."):
-                        try:
-                            follow_messages = [
-                                {
-                                    "role": "user",
-                                    "content": (
-                                        f"The assistant previously generated the following assessment:\n\n{assessment}\n\n"
-                                        f"User follow-up question: {st.session_state.followup_question}\n\n"
-                                        "Please answer the user's question clearly, referencing the assessment where helpful. "
-                                        "Be concise and actionable. Make answer only paragraph long maximum."
-                                    ),
-                                }
-                            ]
-                            follow_resp = client.chat.completions.create(
-                                model="gpt-4.1",
-                                messages=follow_messages,
-                                max_tokens=500,
-                            )
-                            st.session_state.followup_response = follow_resp.choices[0].message.content
-                            st.session_state.followup_submitted = True
-                        except Exception as e:
-                            st.session_state.followup_response = f"⚠️ Error calling OpenAI API: {e}"
-                            st.session_state.followup_submitted = True
-
-        # Show response if submitted
-        if st.session_state.followup_submitted:
-            if st.session_state.followup_choice == "No":
-                st.success(st.session_state.followup_response)
+        
+        # Initialize session state for conversation history
+        if 'conversation_history' not in st.session_state:
+            st.session_state.conversation_history = []
+        if 'continue_conversation' not in st.session_state:
+            st.session_state.continue_conversation = True
+        
+        # Display conversation history
+        if st.session_state.conversation_history:
+            st.markdown("#### Conversation:")
+            for i, exchange in enumerate(st.session_state.conversation_history):
+                st.markdown(f"**Q{i+1}:** {exchange['question']}")
+                st.markdown(f"**A{i+1}:** {exchange['answer']}")
+                st.markdown("---")
+        
+        # Show follow-up UI if conversation is active
+        if st.session_state.continue_conversation:
+            st.write("Do you have any questions or clarifications?")
+            
+            followup_choice = st.radio(
+                "Would you like to ask a question?",
+                ["Yes", "No"],
+                key=f"followup_choice_{len(st.session_state.conversation_history)}"
+            )
+            
+            if followup_choice == "No":
+                if st.button("Finish", key="finish_conversation"):
+                    st.session_state.continue_conversation = False
+                    st.success("Thank you for using the wound assistant.")
+                    if hasattr(st, "rerun"):
+                        st.rerun()
+                    else:
+                        st.experimental_rerun()
             else:
-                st.markdown("**Assistant response:**")
-                st.markdown(st.session_state.followup_response)
+                followup_question = st.text_area(
+                    "Please enter your question or clarification:",
+                    key=f"followup_question_{len(st.session_state.conversation_history)}"
+                )
+                
+                if st.button("Ask", key=f"ask_followup_{len(st.session_state.conversation_history)}"):
+                    if not followup_question or not followup_question.strip():
+                        st.warning("Please enter a question before asking.")
+                    else:
+                        with st.spinner("Getting assistant response..."):
+                            try:
+                                # Build context from conversation history
+                                context = f"Original assessment:\n\n{assessment}\n\n"
+                                if st.session_state.conversation_history:
+                                    context += "Previous conversation:\n"
+                                    for i, exchange in enumerate(st.session_state.conversation_history):
+                                        context += f"Q{i+1}: {exchange['question']}\n"
+                                        context += f"A{i+1}: {exchange['answer']}\n\n"
+                                
+                                follow_messages = [
+                                    {
+                                        "role": "user",
+                                        "content": (
+                                            f"{context}"
+                                            f"Current question: {followup_question}\n\n"
+                                            "Please answer the question clearly, referencing the assessment and previous conversation where helpful. "
+                                            "Be concise and actionable. Make answer only paragraph long maximum."
+                                        ),
+                                    }
+                                ]
+                                
+                                follow_resp = client.chat.completions.create(
+                                    model="gpt-4.1",
+                                    messages=follow_messages,
+                                    max_tokens=500,
+                                )
+                                
+                                response_text = follow_resp.choices[0].message.content
+                                
+                                # Add to conversation history
+                                st.session_state.conversation_history.append({
+                                    'question': followup_question,
+                                    'answer': response_text
+                                })
+                                
+                                # Rerun to show updated conversation
+                                if hasattr(st, "rerun"):
+                                    st.rerun()
+                                else:
+                                    st.experimental_rerun()
+                                    
+                            except Exception as e:
+                                st.error(f"⚠️ Error calling OpenAI API: {e}")
+        else:
+            st.success("Thank you for using the wound assistant.")
