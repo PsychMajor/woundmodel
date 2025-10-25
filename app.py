@@ -267,14 +267,27 @@ with col1:
                         st.markdown("---")
                         st.markdown("### Follow-up")
                         st.write("Do you have any questions or clarifications?")
-                        followup_choice = st.radio("", ["No", "Yes"], key="followup_choice")
-                        if followup_choice == "No":
+
+                        # Initialize session state for follow-up
+                        if 'followup_choice' not in st.session_state:
+                            st.session_state.followup_choice = "No"
+                        if 'followup_question' not in st.session_state:
+                            st.session_state.followup_question = ""
+                        if 'followup_submitted' not in st.session_state:
+                            st.session_state.followup_submitted = False
+                        if 'followup_response' not in st.session_state:
+                            st.session_state.followup_response = ""
+
+                        # UI controls
+                        st.session_state.followup_choice = st.radio("", ["No", "Yes"], key="followup_choice_radio", index=["No", "Yes"].index(st.session_state.followup_choice))
+                        if st.session_state.followup_choice == "No":
                             if st.button("Submit follow-up", key="submit_followup_no"):
-                                st.success("Thank you for using the wound assistant.")
+                                st.session_state.followup_submitted = True
+                                st.session_state.followup_response = "Thank you for using the wound assistant."
                         else:
-                            user_question = st.text_area("Please enter your question or clarification:", key="followup_question")
+                            st.session_state.followup_question = st.text_area("Please enter your question or clarification:", key="followup_question_area", value=st.session_state.followup_question)
                             if st.button("Ask follow-up", key="ask_followup_yes"):
-                                if not user_question or not user_question.strip():
+                                if not st.session_state.followup_question or not st.session_state.followup_question.strip():
                                     st.warning("Please enter a question before asking.")
                                 else:
                                     with st.spinner("Getting assistant response..."):
@@ -284,7 +297,7 @@ with col1:
                                                     "role": "user",
                                                     "content": (
                                                         f"The assistant previously generated the following assessment:\n\n{assessment}\n\n"
-                                                        f"User follow-up question: {user_question}\n\n"
+                                                        f"User follow-up question: {st.session_state.followup_question}\n\n"
                                                         "Please answer the user's question clearly, referencing the assessment where helpful. "
                                                         "Be concise and actionable. Make answer only paragraph long maximum."
                                                     ),
@@ -295,9 +308,16 @@ with col1:
                                                 messages=follow_messages,
                                                 max_tokens=500,
                                             )
-                                            follow_text = follow_resp.choices[0].message.content
+                                            st.session_state.followup_response = follow_resp.choices[0].message.content
+                                            st.session_state.followup_submitted = True
                                         except Exception as e:
-                                            follow_text = f"⚠️ Error calling OpenAI API: {e}"
+                                            st.session_state.followup_response = f"⚠️ Error calling OpenAI API: {e}"
+                                            st.session_state.followup_submitted = True
 
-                                    st.markdown("**Assistant response:**")
-                                    st.markdown(follow_text)
+                        # Show response if submitted
+                        if st.session_state.followup_submitted:
+                            if st.session_state.followup_choice == "No":
+                                st.success(st.session_state.followup_response)
+                            else:
+                                st.markdown("**Assistant response:**")
+                                st.markdown(st.session_state.followup_response)
