@@ -142,14 +142,12 @@ if not st.session_state.terms_accepted:
     show_terms()
     st.stop()
 else:
-    # Scroll to top when terms are accepted (only on first load after acceptance)
-    if 'scrolled_after_terms' not in st.session_state:
-        st.session_state.scrolled_after_terms = True
-        st.markdown("""
-            <script>
-                window.parent.document.querySelector('section.main').scrollTo(0, 0);
-            </script>
-        """, unsafe_allow_html=True)
+    # Scroll to top when terms are accepted
+    st.components.v1.html("""
+        <script>
+            window.parent.document.querySelector('section.main').scrollTo(0, 0);
+        </script>
+    """, height=0)
 
 # Show terms if not accepted
 if not st.session_state.terms_accepted:
@@ -302,7 +300,6 @@ if st.session_state.current_page == "input":
                 # Reset follow-up state for new assessment
                 st.session_state.conversation_history = []
                 st.session_state.continue_conversation = True
-                st.session_state.scrolled_to_results = False  # Reset scroll flag for new results
                 # Use compatible rerun
                 if hasattr(st, "rerun"):
                     st.rerun()
@@ -311,14 +308,13 @@ if st.session_state.current_page == "input":
 
 elif st.session_state.current_page == "results":
     # ==================== RESULTS PAGE ====================
-    # Scroll to top when results page loads (only on first load)
-    if 'scrolled_to_results' not in st.session_state or not st.session_state.scrolled_to_results:
-        st.session_state.scrolled_to_results = True
-        st.markdown("""
-            <script>
-                window.parent.document.querySelector('section.main').scrollTo(0, 0);
-            </script>
-        """, unsafe_allow_html=True)
+    # Scroll to top when results page loads
+    st.markdown('<div id="top"></div>', unsafe_allow_html=True)
+    st.components.v1.html("""
+        <script>
+            window.parent.document.querySelector('section.main').scrollTo(0, 0);
+        </script>
+    """, height=0)
     
     st.title("Wound Care Assessment Results")
     
