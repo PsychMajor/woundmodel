@@ -222,31 +222,22 @@ if st.session_state.current_page == "input":
     st.markdown("---")
 
     st.markdown("### 3. Provider Expertise")
+    st.markdown("""
+        <style>
+        div[data-testid="stSelectbox"] label p {
+            white-space: normal !important;
+            word-wrap: break-word !important;
+        }
+        </style>
+    """, unsafe_allow_html=True)
     expertise = st.selectbox(
         "*What is your level of experience with wounds?*",
         [
             "Healthcare professional with wound care experience",
             "Healthcare professional without wound care experience",
             "Non-healthcare professional"
-        ],
-        help="Select the option that best describes your expertise level"
+        ]
     )
-    # Add custom CSS to ensure text wrapping in selectbox
-    st.markdown("""
-        <style>
-        /* Ensure selectbox options wrap on mobile */
-        div[data-baseweb="select"] > div {
-            white-space: normal !important;
-            word-wrap: break-word !important;
-        }
-        div[role="option"] {
-            white-space: normal !important;
-            word-wrap: break-word !important;
-            min-height: fit-content !important;
-            height: auto !important;
-        }
-        </style>
-    """, unsafe_allow_html=True)
     st.markdown("---")
 
     st.markdown("### 4. Hospital Access")
