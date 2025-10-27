@@ -48,6 +48,7 @@ def process_image(image_file, supplies, setting, expertise, willingness, frequen
     6. Keep your output as a **numbered list** (1., 2., 3., etc.) with concise, actionable wound-care steps.
     7. Place spaces between each step for readability.
     8. Before each step, put a summary statement in bold of that step so a user can quickly scan the plan.
+    9. Place the actual steps underneath the bolded summary in an indented with a bullet point (do this for each step, so its easy to read).
 
     """
 
@@ -261,7 +262,7 @@ if st.session_state.current_page == "input":
     st.markdown("### 7. Moisture Level")
     moisture = st.radio(
         "*What is the wound's moisture condition?*",
-        ["Dry", "Wet", "Normal"]
+        ["Dry", "Wet", "Normal", "Mix of dry and wet"]
     )
     st.markdown("---")
 
