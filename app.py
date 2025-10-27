@@ -372,7 +372,7 @@ elif st.session_state.current_page == "results":
         
         # Show follow-up UI if conversation is active
         if st.session_state.continue_conversation:
-            st.write("Do you have any questions or clarifications?")
+            st.write("Do you have any additional questions?")
             
             followup_choice = st.radio(
                 "Would you like to ask a question?",
