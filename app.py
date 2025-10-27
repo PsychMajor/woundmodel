@@ -46,6 +46,7 @@ def process_image(image_file, supplies, setting, expertise, willingness, frequen
     4. Do not use em dashes (—), en dashes (–), or hyphens (-) for separating phrases; instead use commas or semicolons.
     5. Carefully consider the expertise-level when choosing the language for the instructions
     6. Keep your output as a **numbered list** (1., 2., 3., etc.) with concise, actionable wound-care steps.
+    7. Place spaces between each step for readability.
 
     """
 
