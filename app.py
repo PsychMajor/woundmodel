@@ -48,6 +48,7 @@ def process_image(image_file, supplies, setting, expertise, willingness, frequen
     6. Keep your output as a **numbered list** (1., 2., 3., etc.) with concise, actionable wound-care steps.
     7. Place spaces between each step for readability.
     8. Before each step, put a summary statement (bold and slightly larger font) of that step so a user can quickly scan the plan.
+    9. Only list the steps do not add any additional commentary or explanation outside of the numbered steps.
 
 
     """
