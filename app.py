@@ -224,7 +224,18 @@ if st.session_state.current_page == "input":
     st.markdown("### 3. Provider Expertise")
     st.markdown("""
         <style>
-        div[data-testid="stSelectbox"] label p {
+        /* Wrap the selectbox label text */
+        div[data-testid="stSelectbox"] label {
+            white-space: normal !important;
+        }
+        /* Wrap text inside the selectbox options */
+        div[data-testid="stSelectbox"] div[role="button"] {
+            white-space: normal !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+        }
+        /* Wrap dropdown menu options */
+        ul[role="listbox"] li {
             white-space: normal !important;
             word-wrap: break-word !important;
         }
