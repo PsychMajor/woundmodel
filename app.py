@@ -222,25 +222,6 @@ if st.session_state.current_page == "input":
     st.markdown("---")
 
     st.markdown("### 3. Provider Expertise")
-    st.markdown("""
-        <style>
-        /* Wrap the selectbox label text */
-        div[data-testid="stSelectbox"] label {
-            white-space: normal !important;
-        }
-        /* Wrap text inside the selectbox options */
-        div[data-testid="stSelectbox"] div[role="button"] {
-            white-space: normal !important;
-            word-wrap: break-word !important;
-            overflow-wrap: break-word !important;
-        }
-        /* Wrap dropdown menu options */
-        ul[role="listbox"] li {
-            white-space: normal !important;
-            word-wrap: break-word !important;
-        }
-        </style>
-    """, unsafe_allow_html=True)
     expertise = st.selectbox(
         "*What is your level of experience with wounds?*",
         [
@@ -432,7 +413,7 @@ elif st.session_state.current_page == "results":
                                             f"{context}"
                                             f"Current question: {followup_question}\n\n"
                                             "Please answer the question clearly, referencing the assessment and previous conversation where helpful. "
-                                            "Be concise and actionable. Make answer only paragraph long maximum."
+                                            "Be concise and actionable. Make answer in bullet point form. With no em dashes or hyphens."
                                         ),
                                     }
                                 ]
