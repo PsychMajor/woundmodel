@@ -46,7 +46,7 @@ def process_image(image_file, supplies, setting, expertise, willingness, frequen
     4. Do not use em dashes (—), en dashes (–), or hyphens (-) for separating phrases; instead use commas or semicolons.
     5. Carefully consider the expertise-level when choosing the language for the instructions
     6. Keep your output as a **numbered list** (1., 2., 3., etc.) with concise, actionable wound-care steps.
-    7. Place spaces between each step for readability.
+    7. Places spaces between each step for readability.
 
     """
 
@@ -228,8 +228,25 @@ if st.session_state.current_page == "input":
             "Healthcare professional with wound care experience",
             "Healthcare professional without wound care experience",
             "Non-healthcare professional"
-        ]
+        ],
+        help="Select the option that best describes your expertise level"
     )
+    # Add custom CSS to ensure text wrapping in selectbox
+    st.markdown("""
+        <style>
+        /* Ensure selectbox options wrap on mobile */
+        div[data-baseweb="select"] > div {
+            white-space: normal !important;
+            word-wrap: break-word !important;
+        }
+        div[role="option"] {
+            white-space: normal !important;
+            word-wrap: break-word !important;
+            min-height: fit-content !important;
+            height: auto !important;
+        }
+        </style>
+    """, unsafe_allow_html=True)
     st.markdown("---")
 
     st.markdown("### 4. Hospital Access")
