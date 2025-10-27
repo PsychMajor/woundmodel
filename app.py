@@ -322,11 +322,14 @@ elif st.session_state.current_page == "results":
     
     st.markdown("---")
     
-    # Force scroll to top with JavaScript that runs after page loads
+    # Force scroll to the title anchor using the auto-generated anchor link
     st.markdown("""
         <script>
             setTimeout(function() {
-                window.parent.document.querySelector('section.main').scrollTo(0, 0);
+                var titleElement = window.parent.document.querySelector('h1');
+                if (titleElement) {
+                    titleElement.scrollIntoView({behavior: 'instant', block: 'start'});
+                }
             }, 100);
         </script>
     """, unsafe_allow_html=True)
