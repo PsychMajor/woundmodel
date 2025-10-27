@@ -308,25 +308,28 @@ if st.session_state.current_page == "input":
 
 elif st.session_state.current_page == "results":
     # ==================== RESULTS PAGE ====================
-    # Scroll to top when results page loads
-    st.markdown('<div id="top"></div>', unsafe_allow_html=True)
-    st.components.v1.html("""
-        <script>
-            window.parent.document.querySelector('section.main').scrollTo(0, 0);
-        </script>
-    """, height=0)
-    
     st.title("Wound Care Assessment Results")
     
     # Back button
-    if st.button("← Back to Input", type="secondary"):
-        st.session_state.current_page = "input"
-        if hasattr(st, "rerun"):
-            st.rerun()
-        else:
-            st.experimental_rerun()
+    col1, col2 = st.columns([1, 3])
+    with col1:
+        if st.button("← Back to Input", type="secondary"):
+            st.session_state.current_page = "input"
+            if hasattr(st, "rerun"):
+                st.rerun()
+            else:
+                st.experimental_rerun()
     
     st.markdown("---")
+    
+    # Force scroll to top with JavaScript that runs after page loads
+    st.markdown("""
+        <script>
+            setTimeout(function() {
+                window.parent.document.querySelector('section.main').scrollTo(0, 0);
+            }, 100);
+        </script>
+    """, unsafe_allow_html=True)
     
     # Display uploaded image
     if st.session_state.assessment_data:
