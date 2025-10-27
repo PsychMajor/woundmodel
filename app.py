@@ -46,7 +46,8 @@ def process_image(image_file, supplies, setting, expertise, willingness, frequen
     4. Do not use em dashes (—), en dashes (–), or hyphens (-) for separating phrases; instead use commas or semicolons.
     5. Carefully consider the expertise-level when choosing the language for the instructions
     6. Keep your output as a **numbered list** (1., 2., 3., etc.) with concise, actionable wound-care steps.
-    7. Places spaces between each step for readability.
+    7. Place spaces between each step for readability.
+    8. Before each step, put a summary statement in bold of that step so a user can quickly scan the plan.
 
     """
 
@@ -413,7 +414,7 @@ elif st.session_state.current_page == "results":
                                             f"{context}"
                                             f"Current question: {followup_question}\n\n"
                                             "Please answer the question clearly, referencing the assessment and previous conversation where helpful. "
-                                            "Be concise and actionable. Make answer in bullet point form. With no em dashes or hyphens."
+                                            "Be concise and actionable. Make answer only paragraph long maximum. With no em dashes or hyphens."
                                         ),
                                     }
                                 ]
